@@ -2,6 +2,11 @@
 
 A collection of sample projects demonstrating the capabilities of the Agentverse platform for building autonomous marketing agents. These projects serve as examples and starting points for developers and marketing professionals interested in leveraging AI-driven solutions for social media campaigns using the Agentverse platform.
 
+**Important**
+To acess the Idea Validator Please visit
+https://github.com/bg073/fetch.ai_Hackathon2025_BusinessValidator.git
+
+
 ## Overview
 
 This repository contains a sample project showcasing a multi-agent system for creating, posting, and analyzing marketing content on X (Twitter). The project demonstrates how to use AI to generate ad content, create engaging images, post to social media, and track performance, providing a foundation for building sophisticated marketing automation tools.
