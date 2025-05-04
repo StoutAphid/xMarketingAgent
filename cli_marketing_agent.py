@@ -184,49 +184,56 @@ post tweet: TEXT :: IMG   : Post a tweet with text and one or more images (comma
 ===========================================================
 """)
 
+def handle_cli_command(user_input, asi1_api_key=None):
+    if user_input.lower() in ['exit', 'quit']:
+        print("Goodbye!")
+        return
+    elif user_input.lower() == 'connect twitter':
+        guide_twitter_setup()
+    elif user_input.lower() == 'connect twitter oauth':
+        oauth2_pkce_flow()
+    elif user_input.lower() == 'help twitter':
+        print("\nDetailed Twitter API setup instructions:\n")
+        print("- Twitter Developer Portal: https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api")
+        print("- You need a Project, App, API Key, API Key Secret, Access Token, and Access Token Secret for posting tweets.\n")
+        print("- Add your API Key to your .env file as TWITTER_API_KEY, API Key Secret as TWITTER_API_KEY_SECRET, Access Token as TWITTER_ACCESS_TOKEN, and Access Token Secret as TWITTER_ACCESS_TOKEN_SECRET.\n")
+    elif user_input.lower() == 'twitter profile':
+        get_twitter_profile()
+    elif user_input.lower().startswith('post tweet:'):
+        # Syntax: post tweet: text :: img1.jpg,img2.png
+        if '::' in user_input:
+            tweet_part, images_part = user_input[len('post tweet:'):].split('::', 1)
+            tweet_text = tweet_part.strip()
+            image_paths = [img.strip() for img in images_part.strip().split(',') if img.strip()]
+            if tweet_text:
+                post_tweet(tweet_text, image_paths)
+            else:
+                print("Please provide the tweet text before '::'.")
+        else:
+            tweet_text = user_input[len('post tweet:'):].strip()
+            if tweet_text:
+                post_tweet(tweet_text)
+            else:
+                print("Please provide the tweet text after 'post tweet:'")
+    else:
+        ai_response = converse_with_ai(user_input, asi1_api_key)
+        print(f"Agent: {ai_response}")
+
 def main():
     asi1_api_key = os.getenv('ASI1_API_KEY')
+    # If a command is passed as a command-line argument, execute it directly
+    if len(sys.argv) > 1:
+        user_input = ' '.join(sys.argv[1:])
+        handle_cli_command(user_input, asi1_api_key)
+        return
     print_command_sheet()
     print("\nWelcome to the AI Marketing Agent CLI!")
     print("Type 'connect twitter' to set up Twitter (X) integration.")
     print("Type 'connect twitter oauth' to set up Twitter (X) OAuth 2.0 integration.")
     print("Type 'help' for more options. Type 'exit' or 'quit' to quit.\n")
-
     while True:
         user_input = input("You: ").strip()
-        if user_input.lower() in ['exit', 'quit']:
-            print("Goodbye!")
-            break
-        elif user_input.lower() == 'connect twitter':
-            guide_twitter_setup()
-        elif user_input.lower() == 'connect twitter oauth':
-            oauth2_pkce_flow()
-        elif user_input.lower() == 'help twitter':
-            print("\nDetailed Twitter API setup instructions:\n")
-            print("- Twitter Developer Portal: https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api")
-            print("- You need a Project, App, API Key, API Key Secret, Access Token, and Access Token Secret for posting tweets.\n")
-            print("- Add your API Key to your .env file as TWITTER_API_KEY, API Key Secret as TWITTER_API_KEY_SECRET, Access Token as TWITTER_ACCESS_TOKEN, and Access Token Secret as TWITTER_ACCESS_TOKEN_SECRET.\n")
-        elif user_input.lower() == 'twitter profile':
-            get_twitter_profile()
-        elif user_input.lower().startswith('post tweet:'):
-            # Syntax: post tweet: text :: img1.jpg,img2.png
-            if '::' in user_input:
-                tweet_part, images_part = user_input[len('post tweet:'):].split('::', 1)
-                tweet_text = tweet_part.strip()
-                image_paths = [img.strip() for img in images_part.strip().split(',') if img.strip()]
-                if tweet_text:
-                    post_tweet(tweet_text, image_paths)
-                else:
-                    print("Please provide the tweet text before '::'.")
-            else:
-                tweet_text = user_input[len('post tweet:'):].strip()
-                if tweet_text:
-                    post_tweet(tweet_text)
-                else:
-                    print("Please provide the tweet text after 'post tweet:'")
-        else:
-            ai_response = converse_with_ai(user_input, asi1_api_key)
-            print(f"Agent: {ai_response}")
+        handle_cli_command(user_input, asi1_api_key)
 
 if __name__ == '__main__':
     main()
