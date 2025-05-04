@@ -159,6 +159,27 @@ if st.session_state['step'] == 2:
         st.code(result.stdout, language="text")
         if result.returncode == 0:
             st.success("Tweet posted successfully!")
+            # --- Show Plan, Suggestions, and Tweet Link ---
+            st.markdown("---")
+            st.header("🎯 Your Campaign Plan & Suggestions")
+            st.markdown(f"**Product/Service:** {st.session_state['product']}")
+            st.markdown("**Q&A for Campaign:**")
+            for q, a in st.session_state['answers'].items():
+                st.markdown(f"- **{q}**  \\ {a}")
+            st.markdown("**Ad Option Posted:**")
+            st.markdown(f"> {selected_ad}")
+            # Suggestion (optional):
+            st.info("Tip: Monitor engagement for 24-48 hours and consider A/B testing with alternative options.")
+            # Try to extract tweet URL from stdout or build from username (if available)
+            import re
+            tweet_url = None
+            match = re.search(r'https://twitter.com/[^\s]+/status/\d+', result.stdout)
+            if match:
+                tweet_url = match.group(0)
+            if tweet_url:
+                st.markdown(f"[View your post on X (Twitter)]({tweet_url})")
+            else:
+                st.info("Tweet link will appear here if available.")
         else:
             st.error(f"Failed to post tweet. Error: {result.stderr}")
     if st.button("Start Over"):
