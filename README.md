@@ -4,7 +4,7 @@ A collection of sample projects demonstrating the capabilities of the Agentverse
 
 **Important**
 To acess the Idea Validator Please visit
-https://github.com/bg073/fetch.ai_Hackathon2025_BusinessValidator.git
+https://github.com/bg073/fetch.ai_Hackathon2025_BusinessValidator.git - sadly it is just script, Due to time limitations, Please run "Run.py"
 
 
 ## Overview
